@@ -30,10 +30,13 @@ function voice_filter() {
 	var opt, sel, tmp, i
 
 	for (opt in parse.voice_opts) {
+		if (!parse.voice_opts.hasOwnProperty(opt))
+			continue
 		sel = new RegExp(opt)
 		if (sel.test(curvoice.id)
 		 || sel.test(curvoice.nm)) {
 			for (i in parse.voice_opts[opt])
+			    if (parse.voice_opts[opt].hasOwnProperty(i))
 				do_pscom(parse.voice_opts[opt][i])
 		}
 	}
@@ -41,6 +44,8 @@ function voice_filter() {
 
 /* -- link a ABC symbol into the current voice -- */
 function sym_link(s) {
+	if (!s.ctx)
+		set_ref(s)
 	if (!curvoice.ignore) {
 		parse.last_sym = s;
 		s.prev = curvoice.last_sym
@@ -273,7 +278,7 @@ function sort_all() {
 			 || w_tb[s.type] != wmin)
 				continue
 			if (s.type == STAVES) {
-				sy = sy.next;
+				sy = s.sy;
 				new_sy = true;
 				sy_w = -1;
 				sy_time = s.time
@@ -625,7 +630,7 @@ function do_clip() {
 				s2.p_v.meter = clone(s2.as.u.meter)
 				break
 			case STAVES:
-				sy = sy.next
+				sy = s.sy
 				break
 			}
 		}
@@ -840,6 +845,8 @@ function get_break(param) {
 
 	glovar.break = []
 	for (k in a) {
+		if (!a.hasOwnProperty(k))
+			continue
 		b = a[k];
 		i = b.indexOf(':')
 		if (i < 0) {
@@ -989,6 +996,9 @@ function set_transp() {
 //		return
 	if (curvoice.ckey.k_bagpipe || curvoice.ckey.k_drum)
 		return
+
+	if (cfmt.transp && (curvoice.transp || curvoice.shift))
+		syntax(0, "Mix of old and new transposition syntaxes");
 
 	transp = (cfmt.transp || 0) +		// %%transpose
 		(curvoice.transp || 0) +	// score= / sound=
@@ -1394,9 +1404,6 @@ function do_pscom(text) {
 			switch (s.type) {
 			case NOTE:		// insert a key
 				s = clone(curvoice.okey);
-				s.ctx = parse.ctx;
-				s.istart = parse.istart;
-				s.iend = parse.iend;
 				sym_link(s)
 				break
 			case KEY:
@@ -1720,9 +1727,7 @@ function get_staves(cmd, parm) {
 	 || (maxtime == 0 && staves_found < 0)) {
 		for (v = 0; v < par_sy.voices.length; v++)
 			par_sy.voices[v].range = -1
-//	} else if (staves_found != maxtime) {	// if no 2 %%staves
 	} else {
-// fixme: problem if no common voice with previous %%staves
 
 		/*
 		 * create a new staff system and
@@ -1759,7 +1764,8 @@ function get_staves(cmd, parm) {
 			sym_link(s)	// link the staves in this voice
 		}
 		par_sy.nstaff = nstaff;
-		new_syst()
+		new_syst();
+		s.sy = par_sy
 	}
 
 //	staves_found = maxtime < 0 ? 0 : maxtime
@@ -2300,7 +2306,7 @@ function get_voice(parm) {
 	if (parse.state < 2) {
 		if (a.length != 0)
 			memo_kv_parm(vid, a)
-		if (parse.state == 1)
+		if (vid != '*' && parse.state == 1)
 			new_voice(vid)
 		return
 	}
@@ -2344,7 +2350,12 @@ function get_voice(parm) {
 // change state from 'tune header after K:' to 'in tune body'
 // curvoice is defined when called from get_voice()
 function goto_tune(is_K) {
-	var s, v, p_voice, transp;
+	var	v, p_voice, transp,
+		s = {
+			type: STAVES,
+			dur: 0,
+			sy: par_sy
+		}
 
 	parse.state = 3;			// in tune body
 
@@ -2395,4 +2406,12 @@ function goto_tune(is_K) {
 		}
 		par_sy.nstaff = nstaff
 	}
+
+	// link the first %%score in the top voice
+	p_voice = curvoice;
+	curvoice = voice_tb[par_sy.top_voice];
+	sym_link(s)
+	if (staves_found < 0)
+		s.default = true;
+	curvoice = p_voice
 }

@@ -1,9 +1,9 @@
 //#javascript
 // Generate a JSON representation of ABC
 //
-// Copyright (C) 2016-2017 Jean-Francois Moine
+// Copyright (C) 2016 Jean-Francois Moine
 // This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License version 3 as
+// it under the terms of the GNU General Public License version 2 as
 // published by the Free Software Foundation.
 
 // Usage:
@@ -82,6 +82,7 @@ function AbcJSON(nindent) {			// indentation level
 			} else {
 				h = '{\n'
 				for (i in val)
+				    if (val.hasOwnProperty(i))
 					attr_gen(indn, i, val[i]);
 				json += '\n' + ind + '}'
 			}
@@ -116,15 +117,10 @@ function AbcJSON(nindent) {			// indentation level
 	v = 0;
 	h = '\n'
 	while (1) {
-		if (!voice_tb[v])
-			break
-		if (!voice_tb[v].sym) {	// ignore voices without symbols
-			v++
-			continue
-		}
 		h += ind2 + '{\n' +
 			ind3 + '"voice_properties": {\n'
 		for (i in voice_tb[v])
+		    if (voice_tb[v].hasOwnProperty(i))
 			attr_gen(ind4, i, voice_tb[v][i]);
 
 		json += '\n' + ind3 + '},\n' +
@@ -139,8 +135,9 @@ function AbcJSON(nindent) {			// indentation level
 			json += '\n' + ind3 + ']\n' +
 				ind2 + '}'
 		}
-		h = ',\n';
-		v++
+		h = ',\n'
+		if (!voice_tb[++v])
+			break
 	}
 	return json + '\n' + inb + ']\n}\n'
     }
