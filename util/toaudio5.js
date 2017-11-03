@@ -49,6 +49,7 @@
 //		[3]: MIDI note pitch (with cents)
 //		[4]: duration
 //		[5]: volume (0..1 - optional)
+//		[6]: custom object to be passed to the onnote - optional
 //
 // stop() - stop playing
 //
@@ -423,8 +424,8 @@ function Audio5(i_conf) {
 			if (follow) {
 			    var	i = e[0];
 				st = (st - ac.currentTime) * 1000;
-				setTimeout(onnote, st, i, true);
-				setTimeout(onnote, st + d * 1000, i, false)
+				setTimeout(onnote, st, i, true, e[6]);
+				setTimeout(onnote, st + d * 1000, i, false, e[6])
 			}
 
 			e = a_e[++evt_idx]
