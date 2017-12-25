@@ -4405,6 +4405,8 @@ function set_sym_glue(width) {
 		if (s.seqst) {
 			space = s.shrink
 			if (s.space != 0) {
+				xmax += (s.space > space ? s.space : space) *
+					spafac * 1.8
 				if (space < s.space * spafac)
 					space = s.space * spafac;
 				xmax += s.space * spafac * 1.8
