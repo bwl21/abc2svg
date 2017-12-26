@@ -4320,6 +4320,8 @@ function set_piece() {
 		last.ts_next = last.next = s;
 		s.shrink = last.wr + 8;
 		s.space = set_space(s) * .9 - 7
+		if (s.space < s.shrink)
+			s.space = s.shrink
 	}
 }
 
