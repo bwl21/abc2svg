@@ -550,7 +550,7 @@ function Audio5(i_conf) {
 			return gain_val
 		}
 		if (gain)
-			gain.gain.value = v
+			gain.gain.setTargetAtTime(v, gain.context.currentTime, 0.015);
 		else
 			gain_val = v;
 		set_cookie("volume", v.toFixed(2))
@@ -563,7 +563,7 @@ function Audio5(i_conf) {
 		conf.ac = ac = new (window.AudioContext ||
 					window.webkitAudioContext);
 		gain = ac.createGain();
-		gain.gain.value = gain_val;
+		gain.gain.setTargetAtTime(gain_val, gain.context.currentTime, 0.015);
 		gain.connect(ac.destination)
 	}
 
