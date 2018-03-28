@@ -170,6 +170,9 @@ function Audio5(i_conf) {
 		rates[instr] = []
 		for (i = 0; i < infos.length; i++) {
 			gen = infos[i].generator;
+			if (! gen.sampleID)
+        continue;
+
 			sid = gen.sampleID.amount;
 			sampleRate = parser.sampleHeader[sid].sampleRate;
 			sample = parser.sample[sid];
