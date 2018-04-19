@@ -242,11 +242,8 @@ continued by a second call to `tosvg`.
     
     `sh` returns the height in the current SVG container.
 
-**ax**: function to convert the x coordinate
-
-**ay**: function to convert the y coordinate
-
-  - **ah**: function to convert a height  
+  - **ax**, **ay**, **ah**: function to convert the x coordinate, y
+    coordinate, height  
     These functions return values relative to the global SVG container.
     
     They may be used in place of `sx`, `sy` and `sh` when elements must
@@ -267,4 +264,4 @@ The global variable `abc2svg` is an object which contains:
   - **vdate**  
     date of the distribution of current version
 
-Version: v1.16.4-16-g8ea42ea
+Version: v1.16.4-17-gbcf2672
