@@ -264,4 +264,4 @@ The global variable `abc2svg` is an object which contains:
   - **vdate**  
     date of the distribution of current version
 
-Version: v1.16.4-17-gbcf2672
+Version: v1.16.4-18-gc8381c9

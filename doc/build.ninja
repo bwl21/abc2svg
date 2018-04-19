@@ -12,7 +12,8 @@ rule md
   cp $$BASENAME.md $$BASENAME.tmp ;$
   echo "\n\nVersion: $$VERSION\n" >> $$BASENAME.tmp; $
   pandoc_2.0.5  -M --standalone -f markdown $$BASENAME.tmp --atx-headers -t gfm -o $$BASENAME.gfm.md ; $
-  pandoc_2.0.5  --standalone -f markdown $$BASENAME.tmp --atx-headers -t html5 -o $$BASENAME.md.html ; $
+  pandoc_2.0.5  --standalone -f markdown $$BASENAME.tmp --atx-headers -t html5 -o $$BASENAME.md.xhtml ; $
+  pandoc_2.0.5  --standalone -f gfm $$BASENAME.gfm.md --atx-headers -t html5 -o $$BASENAME.gfm.xhtml ; $
   pandoc_2.0.5  --standalone -f markdown -s $$BASENAME.md --atx-headers -t markdown -o $$BASENAME.md; $
   rm $$BASENAME.tmp
 
