@@ -616,6 +616,13 @@ function edit_init() {
 		document.head.appendChild(s)
 	}
 
+	function set_abc(){
+    var v = storage(true, 'abc-source');
+    if (v) {
+      elt_ref.source.value = v;
+    }
+  }
+
 	function set_pref() {
 	    var	v = storage(true, "fontsz")
 		if (v) {
@@ -686,6 +693,7 @@ function edit_init() {
 		});
 	}
 	set_pref()	// set the preferences from local storage
+	set_abc()   // load abc from local storage
 }
 
 // drag and drop
@@ -719,6 +727,7 @@ function dropped(evt) {
 // render the music after 2 seconds on textarea change
 var timer
 function src_change() {
+	storage(true, 'abc-source', elt_ref.source.value);
 	clearTimeout(timer);
 	if (!playing)
 		timer = setTimeout(render, 2000)
