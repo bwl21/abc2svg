@@ -25,7 +25,8 @@ function loadtxt() {
 		pr: 'Preferences',
 		saveas: 'Save file',
 		sful: 'Soundfont URL',
-		sp: 'Speed'
+		sp: 'Speed',
+		kls: 'keep abc in localstorage'
 	}
 
 	for (var k in text_kv)

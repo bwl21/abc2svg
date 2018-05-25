@@ -491,6 +491,19 @@ function destroyClickedElement(evt) {
 	document.body.removeChild(evt.target)
 }
 
+// handle saving to localstoreage
+
+function set_keep_in_localstorage(e){
+	if (e.checked) {
+    storage(true, 'keep-abc-source', true);
+	}
+	else
+	{
+    storage(true, 'keep-abc-source', 0);
+    storage(true, 'abc-source', 0);
+	}
+}
+
 // set the size of the font of the textarea
 function setfont() {
     var	fs = document.getElementById("fontsize").value.toString();
@@ -682,7 +695,8 @@ function edit_init() {
 				document.getElementById("playdiv4").style.display =
 					"list-item";
 
-			document.getElementById("fol").checked = abcplay.set_follow();
+      document.getElementById("fol").checked = abcplay.set_follow();
+      document.getElementById("klsl").checked = storage(true, 'keep-abc-source')
 			document.getElementById("sfu").value = abcplay.set_sfu();
 //			document.getElementById("spv").innerHTML =
 //				Math.log(abcplay.set_speed()) / Math.log(3);
@@ -727,7 +741,9 @@ function dropped(evt) {
 // render the music after 2 seconds on textarea change
 var timer
 function src_change() {
-	storage(true, 'abc-source', elt_ref.source.value);
+	if (storage(true, 'keep-abc-source')){
+    storage(true, 'abc-source', elt_ref.source.value);
+  }
 	clearTimeout(timer);
 	if (!playing)
 		timer = setTimeout(render, 2000)

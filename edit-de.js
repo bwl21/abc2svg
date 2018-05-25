@@ -25,8 +25,9 @@ function loadtxt() {
 		pr: 'Einstellungen',
 		saveas: 'Speichere File',
 		sful: 'Sound font URL',
-		sp: 'Speed'
-	}
+		sp: 'Speed',
+    kls: 'abc im localstore halten'
+  }
 
 	for (var k in text_kv)
 		document.getElementById(k).innerHTML = text_kv[k];
