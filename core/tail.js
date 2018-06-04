@@ -32,7 +32,7 @@ Abc.prototype.get_cur_sy = function() { return cur_sy };
 Abc.prototype.get_curvoice = function() { return curvoice };
 Abc.prototype.get_delta_tb = function() { return delta_tb };
 Abc.prototype.get_decos = function() { return decos };
-Abc.prototype.get_fname = function() { return parse.ctx.fname };
+Abc.prototype.get_fname = function() { return parse.fname };
 Abc.prototype.get_font = get_font;
 Abc.prototype.get_font_style = function() { return font_style };
 Abc.prototype.get_glyphs = function() { return glyphs };
@@ -73,7 +73,8 @@ Abc.prototype.svg_flush = svg_flush;
 		for (var k = 0; k < hs.length; k++) {
 			h = hs[k]
 			if (typeof h == "string") {
-				eval("Abc.prototype." + h + "=" + h)
+				if (!self[h])
+					eval("self." + h + "=" + h)
 			} else {
 				eval("of=" + h[0] + ";" +
 					h[0] + "=" + h[1] + ".bind(self,of)")

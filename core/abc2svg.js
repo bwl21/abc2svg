@@ -118,13 +118,17 @@ var	glovar = {
 	psvg			// PostScript
 
 // utilities
-function clone(obj) {
+function clone(obj, lvl) {
 	if (!obj)
 		return obj
 	var tmp = new obj.constructor()
 	for (var k in obj)
-	    if (obj.hasOwnProperty(k))
-		tmp[k] = obj[k]
+	    if (obj.hasOwnProperty(k)) {
+		if (lvl && typeof obj[k] == 'object')
+			tmp[k] = clone(obj[k], lvl - 1)
+		else
+			tmp[k] = obj[k]
+	    }
 	return tmp
 }
 
@@ -183,8 +187,8 @@ function error(sev, s, msg, a1, a2, a3, a4) {
 			default  : return a4
 			}
 		})
-	if (s && s.ctx)
-		errbld(sev, msg, s.ctx.fname, s.istart)
+	if (s && s.fname)
+		errbld(sev, msg, s.fname, s.istart)
 	else
 		errbld(sev, msg)
 }
@@ -213,7 +217,7 @@ function scanBuf() {
 
 function syntax(sev, msg, a1, a2, a3, a4) {
     var	s = {
-		ctx: parse.ctx,
+		fname: parse.fname,
 		istart: parse.istart + parse.line.index
 	}
 

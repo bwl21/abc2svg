@@ -31,7 +31,7 @@ var	qplet_tb = new Int8Array([ 0, 1, 3, 2, 3, 0, 2, 0, 3, 0 ]),
 
 // set the source references of a symbol
 function set_ref(s) {
-	s.ctx = parse.ctx;
+	s.fname = parse.fname;
 	s.istart = parse.istart;
 	s.iend = parse.iend
 }
@@ -488,8 +488,8 @@ function set_vp(a) {
 	if (pos) {
 		curvoice.pos = clone(curvoice.pos)
 		for (item in pos)
-		    if (pos.hasOwnProperty(item))
-			curvoice.pos[item] = pos[item]
+			if (pos.hasOwnProperty(item))
+				curvoice.pos[item] = pos[item]
 	}
 
 	if (s) {
@@ -556,19 +556,15 @@ function new_key(param) {
 	case 'H':				// bagpipe
 		switch (param[1]) {
 		case 'P':
-			s.k_bagpipe = "P";
-			i++
-			break
 		case 'p':
-			s.k_bagpipe = "p";
-			s.k_sf = 2;
+			s.k_bagpipe = param[1];
+			s.k_sf = param[1] == 'P' ? 0 : 2;
 			i++
 			break
 		default:
 			syntax(1, "Unknown bagpipe-like key")
 			break
 		}
-		key_end = true
 		break
 	case 'P':
 		s.k_drum = true;
@@ -593,6 +589,14 @@ function new_key(param) {
 		}
 		param = param.slice(i).trim()
 		switch (param.slice(0, 3).toLowerCase()) {
+		default:
+			if (param[0] != 'm'
+			 || (param[1] != ' ' && param[1] != '\t'
+			  && param[1] != '\n')) {
+				key_end = true
+				break
+			}
+			// fall thru ('m')
 		case "aeo":
 		case "m":
 		case "min": s.k_sf -= 3;
@@ -614,16 +618,6 @@ function new_key(param) {
 			break
 		case "phr": s.k_sf -= 4;
 			mode = 2
-			break
-		default:
-			if (param[0] == 'm'
-			 && (param[1] == ' ' || param[1] == '\t'
-			  || param[1] == '\n')) {
-				s.k_sf -= 3;
-				mode = 5
-				break
-			}
-			key_end = true
 			break
 		}
 		if (!key_end)
@@ -1114,7 +1108,7 @@ function new_bar() {
 		line = parse.line,
 		s = {
 			type: BAR,
-			ctx: parse.ctx,
+			fname: parse.fname,
 			istart: parse.bol + line.index,
 			dur: 0,
 			multi: 0		// needed for decorations
@@ -1319,7 +1313,7 @@ function new_bar() {
 	 && !(par_sy.staves[curvoice.st - 1].flags & STOP_BAR)) {
 		s2 = {
 			type: BAR,
-			ctx: s.ctx,
+			fname: s.fname,
 			istart: s.istart,
 			iend: s.iend,
 			bar_type: "[",
@@ -1834,7 +1828,7 @@ function new_note(grace, tp_fact) {
 	parse.stemless = false;
 	s = {
 		type: NOTE,
-		ctx: parse.ctx,
+		fname: parse.fname,
 		stem: 0,
 		multi: 0,
 		nhd: 0,
@@ -2595,7 +2589,7 @@ function parse_music_line() {
 				a_dcn = undefined;
 				grace = {
 					type: GRACE,
-					ctx: parse.ctx,
+					fname: parse.fname,
 					istart: parse.bol + line.index,
 					dur: 0,
 					multi: 0

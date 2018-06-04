@@ -231,7 +231,7 @@ function tosvg(in_fname,		// file name
 			return false
 		}
 		i = file.indexOf('\n', i)
-		if (parse.select.test(file.slice(bol, i)))
+		if (parse.select.test(file.slice(parse.bol, i)))
 			return true
 		re = /\n\w*\n/;
 		re.lastIndex = i;
@@ -280,9 +280,7 @@ function tosvg(in_fname,		// file name
 
 	// initialize
 	parse.file = file;		// used for errors
-	parse.ctx = {
-		fname: in_fname
-	}
+	parse.fname = in_fname
 
 	// scan the file
 	if (bol == undefined)
@@ -531,16 +529,10 @@ function tosvg(in_fname,		// file name
 
 			cfmt_sav = clone(cfmt);
 			cfmt.pos = clone(cfmt.pos);
-			info_sav = clone(info)
-			if (info.V) {
-				info_sav.V = {}
-				for (i in info.V)
-				    if (info.V.hasOwnProperty(i))
-					info_sav.V[i] = clone(info.V[i])
-			}
+			info_sav = clone(info, 1);
 			char_tb_sav = clone(char_tb);
 			glovar_sav = clone(glovar);
-			maps_sav = maps;
+			maps_sav = clone(maps, 1);
 			mac_sav = clone(mac);
 			maci_sav = new Int8Array(maci);
 			info.X = text;

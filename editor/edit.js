@@ -145,8 +145,12 @@ function loadlang(lang, no_memo) {
 // show/hide a popup message
 function popshow(area, visible) {
 	var e = document.getElementById(area)
-	if (pop)
-		pop.style.visibility = 'hidden';
+	if (pop) {
+		if (pop == e)
+			visible = false
+		else
+			pop.style.visibility = 'hidden'
+	}
 	e.style.visibility = visible ? 'visible' : 'hidden';
 	pop = visible ? e : null
 }
@@ -513,11 +517,6 @@ function setfont() {
 }
 
 // playing
-// set 'follow music'
-function set_follow(e) {
-	abcplay.set_follow(e.checked)
-	storage(true, "follow", e.checked == "1" ? 0 : "0")
-}
 // set soundfont URL
 function set_sfu(v) {
 	abcplay.set_sfu(v)
@@ -690,7 +689,6 @@ function edit_init() {
 			e.addEventListener("click", play_tune);
 			e.style.display = "inline-block";
 			document.getElementById("playdiv1").style.display =
-				document.getElementById("playdiv2").style.display =
 				document.getElementById("playdiv3").style.display =
 				document.getElementById("playdiv4").style.display =
 					"list-item";
